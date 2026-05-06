@@ -1,5 +1,3 @@
-import { useMemo } from 'react'
-
 const COLORS = ['#00ff9f', '#ff2d78', '#00d4ff', '#ffd700', '#a855f7', '#ff6b35']
 
 interface Piece {
@@ -14,21 +12,22 @@ interface Piece {
   round: boolean
 }
 
+// Generated once at module load — keeps Math.random() out of render
+function rng(min: number, max: number) { return min + Math.random() * (max - min) }
+const PIECES: Piece[] = Array.from({ length: 60 }, (_, i) => ({
+  id: i,
+  left: rng(0, 100),
+  delay: rng(0, 2.5),
+  duration: rng(2, 4),
+  color: COLORS[Math.floor(Math.random() * COLORS.length)],
+  size: rng(6, 12),
+  rotate: rng(0, 360),
+  drift: rng(-60, 60),
+  round: Math.random() > 0.5,
+}))
+
 export default function Confetti() {
-  const pieces = useMemo<Piece[]>(() => {
-    const rng = (min: number, max: number) => min + Math.random() * (max - min)
-    return Array.from({ length: 60 }, (_, i) => ({
-      id: i,
-      left: rng(0, 100),
-      delay: rng(0, 2.5),
-      duration: rng(2, 4),
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      size: rng(6, 12),
-      rotate: rng(0, 360),
-      drift: rng(-60, 60),
-      round: Math.random() > 0.5,
-    }))
-  }, [])
+  const pieces = PIECES
 
   return (
     <div style={{

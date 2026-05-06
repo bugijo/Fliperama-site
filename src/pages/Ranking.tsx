@@ -119,8 +119,9 @@ export default function Ranking() {
 
   // Initial load + 10s polling
   useEffect(() => {
-    load()
-    const id = setInterval(() => load(), POLL_INTERVAL)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void load()
+    const id = setInterval(() => { void load() }, POLL_INTERVAL)
     return () => {
       clearInterval(id)
       if (movementTimer.current) clearTimeout(movementTimer.current)

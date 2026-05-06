@@ -153,7 +153,7 @@ export default function Redeem() {
   const rewardId = params.get('rewardId') ?? ''
 
   const [reward, setReward] = useState<Reward | null>(null)
-  const [loadingReward, setLoadingReward] = useState(true)
+  const [loadingReward, setLoadingReward] = useState(() => !!rewardId)
   const [rewardError, setRewardError] = useState('')
   const [expired, setExpired] = useState(false)
 
@@ -166,12 +166,12 @@ export default function Redeem() {
   const [successMessage, setSuccessMessage] = useState('')
 
   const soundRef = useRef(soundEnabled)
-  soundRef.current = soundEnabled
+  useEffect(() => { soundRef.current = soundEnabled }, [soundEnabled])
 
   const handleExpired = useCallback(() => setExpired(true), [])
 
   useEffect(() => {
-    if (!rewardId) { setLoadingReward(false); return }
+    if (!rewardId) return
     api.reward(rewardId)
       .then(r => {
         setReward(r)
